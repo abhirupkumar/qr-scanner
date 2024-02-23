@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { Camera } from 'expo-camera';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function ScannerScreen({ navigation }) {
     const [display, setDisplay] = useState("");
     const [hasPermission, setHasPermission] = useState(true);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         (async () => {
@@ -13,11 +15,6 @@ export default function ScannerScreen({ navigation }) {
             setHasPermission(status === "granted");
         })();
     }, []);
-
-    const checkPermission = async () => {
-        const { status } = await Camera.requestCameraPermissionsAsync();
-        setHasPermission(status === "granted");
-    }
 
     if (hasPermission === null) {
         return <View style={{
@@ -36,7 +33,7 @@ export default function ScannerScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Camera
+            {isFocused && <Camera
                 style={{ flex: 1 }}
                 barCodeScannerSettings={{
                     barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
@@ -47,7 +44,7 @@ export default function ScannerScreen({ navigation }) {
                     let newResult = result.replace(/['"]+/g, '');
                     setDisplay(newResult)
                 }}
-            />
+            />}
             {display != "" && <View style={styles.boxContainer}>
                 <View style={{ marginBottom: 50 }}>
                     <Text
@@ -70,13 +67,6 @@ export default function ScannerScreen({ navigation }) {
                             onPress={() => setDisplay("")}
                             title='Clear' />
                     </View>
-                </View>
-            </View>}
-            {hasPermission != true && <View style={styles.boxContainer}>
-                <View style={{ marginBottom: 50 }}>
-                    <Button
-                        onPress={checkPermission}
-                        title='Check For Camera Permission' />
                 </View>
             </View>}
             <View

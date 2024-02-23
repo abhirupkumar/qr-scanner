@@ -58,7 +58,7 @@ export default function LoginScreen({ navigation }) {
 
             <View style={styles.buttonView}>
                 <Pressable style={styles.button} onPress={onLogin}>
-                    <Text style={styles.buttonText}>{loading ? "..." : "Login"}</Text>
+                    <Text style={styles.buttonText}>{loading ? "Loading..." : "Login"}</Text>
                 </Pressable>
             </View>
             <Pressable onPress={() => navigation.push("SignUpScreen")} style={styles.footerText}><Text>Don't Have Account?<Text style={styles.signup}>  Sign Up</Text></Text></Pressable>
